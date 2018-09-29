@@ -34,11 +34,19 @@ public class RideShareApplication {
     }
     
     @RequestMapping(path="/users", method=RequestMethod.GET)
-    public String index() {
+    public String user() {
         List<Map<String,Object>> list;
         list = jdbcTemplate.queryForList("select * from user_table");
         return list.toString();
     }
+    
+    @RequestMapping(path="/trips", method=RequestMethod.GET)
+    public String trip() {
+        List<Map<String,Object>> list;
+        list = jdbcTemplate.queryForList("select * from trip_table");
+        return list.toString();
+    }
+
 
     @RequestMapping(path="/users/{id}", method=RequestMethod.GET)
     public String read(@PathVariable String id) {
