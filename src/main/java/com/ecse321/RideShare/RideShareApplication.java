@@ -47,7 +47,6 @@ public class RideShareApplication {
         return list.toString();
     }
 
-
     @RequestMapping(path="/users/{id}", method=RequestMethod.GET)
     public String read(@PathVariable String id) {
         List<Map<String,Object>> list;

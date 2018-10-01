@@ -1,7 +1,7 @@
-package com.ecse321.RideShare;
+package com.ecse321.RideShare.model;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class Trip {
 	private String otherComments;
 
 	public Trip(int driverID, String driverEmail, String driverPhone, String date, String depLocation, ArrayList<String> destinations, 
-			ArrayList<Float> tripDurations, ArrayList<Float> prices, int seats, String vehicleType, String licensePlate, String comments) {
+			ArrayList<Float> tripDurations, ArrayList<Float> prices, int seats, ArrayList<Integer> passengerIDList, String vehicleType, String licensePlate, String comments) {
 		tripID = tripIDCounter;
 		tripIDCounter++;
 		this.driverID = driverID;
@@ -39,6 +39,7 @@ public class Trip {
 		this.prices = prices;
 		
 		this.availableSeats = seats;
+		this.passengerIDList = passengerIDList; //added passengerIDList
 		this.vehicleType = vehicleType;
 		this.licensePlate = licensePlate;
 		this.otherComments = comments;
@@ -79,13 +80,14 @@ public class Trip {
 	}
 	
 	//Method that takes a String formatted in the manner shown below and turns it into a date format object
-	private static Date parseDate(String date) {  
+	private static Date parseDate(String date) { 
+		//use sql.date instead of util.date
 		try {
-	    Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);  
-	    return date1;
+	    java.util.Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);  
+	    java.sql.Date sqlDate = new java.sql.Date(date1.getTime());
+	    	return sqlDate;
 		} catch (ParseException e) {
             return null;
         }
-	}
-
+	}	
 }
