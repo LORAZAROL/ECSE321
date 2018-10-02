@@ -64,7 +64,7 @@ public class RideShareApplication {
     @RequestMapping(path="/users/{id}", method=RequestMethod.GET)
     public String read(@PathVariable String id) {
         List<Map<String,Object>> list;
-        list = jdbcTemplate.queryForList("select * from user_table where userid = ?", id);
+        list = jdbcTemplate.queryForList("select * from user_table where userid = ?", Integer.parseInt(id));
         return list.toString();
     }
  
