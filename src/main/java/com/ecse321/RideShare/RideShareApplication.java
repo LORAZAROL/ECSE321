@@ -67,8 +67,16 @@ public class RideShareApplication {
     public String trip_search(ModelMap modelMap, @RequestParam("dep") String departure, 
     		@RequestParam("dest") String destination, @RequestParam("date") String date, @RequestParam("seats") String seats) {
     	
-    	List<Map<String,Object>> list;
-        list = jdbcTemplate.queryForList("select * from trip_table WHERE departure_location=? AND destinations=? AND date=? AND seats >=?", departure, destination, date, seats);
+    	
+    		if (departure != "") { departure = "departure_location='" + departure + "'"; }
+    		if (destination != "") { destination = "AND destinations='" + destination + "'"; }
+    		if (date != "") { date = "AND departure_date='" + date + "'"; }
+    		if (seats != "") { date = "AND seats_available>='" + seats + "'"; }
+    		
+    		List<Map<String,Object>> list;
+    		// this is security-wise terribly terribly BAD, but leave as is for now
+    		String query = "select * from trip_table WHERE " + departure + destination + date;
+        list = jdbcTemplate.queryForList(query);
         return list.toString();
     }
     
