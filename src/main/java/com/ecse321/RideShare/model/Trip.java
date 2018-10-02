@@ -25,7 +25,7 @@ public class Trip {
 	private String otherComments;
 
 	public Trip(int driverID, String driverEmail, String driverPhone, String date, String depLocation, ArrayList<String> destinations, 
-			ArrayList<Float> tripDurations, ArrayList<Float> prices, int seats, ArrayList<Integer> passengerIDList, String vehicleType, String licensePlate, String comments) {
+			ArrayList<Float> tripDurations, ArrayList<Float> prices, int seats, String vehicleType, String licensePlate, String comments) {
 		tripID = tripIDCounter;
 		tripIDCounter++;
 		this.driverID = driverID;
@@ -39,7 +39,6 @@ public class Trip {
 		this.prices = prices;
 		
 		this.availableSeats = seats;
-		this.passengerIDList = passengerIDList; //added passengerIDList
 		this.vehicleType = vehicleType;
 		this.licensePlate = licensePlate;
 		this.otherComments = comments;
@@ -52,6 +51,9 @@ public class Trip {
 	}
 	public Date getDepartureDate() {
 		return this.departureDate;
+	}
+	public String getDepartureLocation() { 
+		return this.departureLocation;
 	}
 	public ArrayList<String> getDestination() {
 		return this.destinations;
