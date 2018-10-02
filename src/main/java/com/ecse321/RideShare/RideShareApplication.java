@@ -67,6 +67,13 @@ public class RideShareApplication {
         list = jdbcTemplate.queryForList("select * from user_table where userid = ?", Integer.parseInt(id));
         return list.toString();
     }
+    
+    @RequestMapping(path="/trips/{id}", method=RequestMethod.GET)
+    public String readTripTable(@PathVariable String id) {
+        List<Map<String,Object>> list;
+        list = jdbcTemplate.queryForList("select * from trip_table where trip_id = ?", Integer.parseInt(id));
+        return list.toString();
+    }
  
     //Creates a new user by taking all of the below-specified inputs
     @PostMapping("/users/{firstName}/{lastName}/{email}/{phoneNumber}/{password}/{isAdmin}")
