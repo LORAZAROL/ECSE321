@@ -1,4 +1,4 @@
-package com.ecse321.RideShare;
+package com.ecse321.RideShare.model;
 
 public class User {
 	private static int idCounter = 1; //A counter that is incremented every time a User is created, so no two ID's are equal
