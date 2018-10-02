@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +62,17 @@ public class RideShareApplication {
         list = jdbcTemplate.queryForList("select * from trip_table");
         return list.toString();
     }
-
+       
+    @RequestMapping(path="/search", method=RequestMethod.POST)
+    public String trip_search(ModelMap modelMap, @RequestParam("dep") String departure, 
+    		@RequestParam("dest") String destination, @RequestParam("date") String date, @RequestParam("seats") String seats) {
+    	
+    	List<Map<String,Object>> list;
+        list = jdbcTemplate.queryForList("select * from trip_table WHERE departure_location=? AND destinations=? AND date=? AND seats >=?", departure, destination, date, seats);
+        return list.toString();
+    }
+    
+    
     @RequestMapping(path="/users/{id}", method=RequestMethod.GET)
     public String read(@PathVariable String id) {
         List<Map<String,Object>> list;
