@@ -65,7 +65,7 @@ public class RideShareApplication {
     }
 	
 	// search user_table based on id or name
-	@RequestMapping(path="/users/search", method=RequestMethod.GET)
+	@RequestMapping(path="/users/search", method=RequestMethod.POST)
 	public String user_search (ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String userid, @RequestParam(name="keyword", defaultValue= "") String keyword) {
 		if (userid.isEmpty() == false) {
 			List<Map<String,Object>> list;
@@ -109,7 +109,7 @@ public class RideShareApplication {
 	}
        
 	// searching trips based on queries
-	@RequestMapping(path="/trips/search", method=RequestMethod.GET)
+	@RequestMapping(path="/trips/search", method=RequestMethod.POST)
 	public String trip_search(ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String tripid, @RequestParam(name="dep", defaultValue="") String departure, 
 			@RequestParam(name="dest", defaultValue="") String destination, @RequestParam(name="date", defaultValue="") String date, 
 			@RequestParam(name="seats", defaultValue="") String seats) {
