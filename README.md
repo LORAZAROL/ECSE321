@@ -14,6 +14,17 @@ Sep.30, 2018: Added Trip and User classes
 - Other methods are also included, like ones to add/remove users from a trip or to update the average driver/passenger rating of a user
 - No connection has been made yet to the database or the RESTful API, just the creation of the classes
 
+Oct.1, 2018: Added Persistence, service, model and controller packages
+Change package structures:
+add package model, controller, persistence, service packages inside RideShare package. Model is consisted of trip and user class. This modification is made to reduce the amount of reload when importing these two classes.
+Add "Passenger ID" field in trip constructor
+Add Persistence class:
+method to connect database on Heroku to code
+method to return newly changed trip
+this is not completed yet
+Change import package "util.date" to "sql.date", in the case of exchanging data "date" with PostgreSQL
+Lots of work isn't finished yet, but I still want to make one commit. If you read and find any problem please tell me
+
 Oct.2, 2018: Added REST GET Method to create new Trip and User objects
 - Each method currently takes a lot of input (all that is necessary to create a trip or user) and formats it as appropriate then creates an object from this
 - This does not yet connect with the database table to create a new entry, it simply creates an instance of the object
