@@ -3,10 +3,12 @@ Springboot backend implementation for the ride-sharing service.
 
 ### Changelog
 Oct.3, 2018: Search component: 
-- Changed the URI for searching trips to "/trips/search"
+- Changed the URI for searching trips to "/trips/search". Returns usage if no queries given. 
 Usage: Send a POST request to "/trips/search?dep={departure_location}&dest={destination}&date={departure_date}&seats={seats_required}"
-- Added the user search to "/users/search", keyword could be the user's name. First and last name should be separated with space if both entered. 
-Usage: Send a POST request to "/users/search?keyword={name}"
+- Added the user search to "/users/search". Returns usage if no queries given. 
+Queries: id (userid), keyword (firstname, lastname, or both but separated using space)
+Usage: Send a POST request to "/users/search?id={id}" or "/users/search?keyword={name}"
+
 
 Oct.2, 2018: Added REST GET Method to create new Trip and User objects
 - Each method currently takes a lot of input (all that is necessary to create a trip or user) and formats it as appropriate then creates an object from this
