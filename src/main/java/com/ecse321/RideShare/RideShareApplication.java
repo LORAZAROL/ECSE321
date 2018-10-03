@@ -28,73 +28,118 @@ import com.ecse321.RideShare.model.Trip;
 @RestController
 
 public class RideShareApplication {
-    private static final Logger LOG = LoggerFactory.getLogger(RideShareApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RideShareApplication.class);
   
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(RideShareApplication.class, args);
 	}
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-    
-    @RequestMapping(path="/")
-    public String greeting() {
-        return "Hello, world! ";
-    }
-    
-    //Created a new path just to provide the instructions on how to create a new user or trip
-    @RequestMapping(path="/instructions")
-    public String instructions() {
-        return "Create a new user with: /users/{firstName}/{lastName}/{email}/{phoneNumber}/{password}/{isAdmin} \n"
+	@RequestMapping(path="/")
+	public String greeting() {
+		return "Hello, world! ";
+	}
+	
+	//Created a new path just to provide the instructions on how to create a new user or trip
+	@RequestMapping(path="/instructions")
+	public String instructions() {
+		return "Create a new user with: /users/{firstName}/{lastName}/{email}/{phoneNumber}/{password}/{isAdmin} \n"
         		+ "Create a new trip with: /trips/{driverID}/{driverEmail}/{driverPhone}/{Date in format: dd-MM-yyyy HH:mm:ss}/{depLocation}/{destinations}/{tripDurations}/{prices}/{seats}/{vehicleType}/{licensePlate}/{comments}";
+		}
+	
+/*
+ * API for Requesting Data
+ */
+	/* 
+	 * For user data (DB: 'user_table')
+	 */
+	
+	// returns the full list of users
+	@RequestMapping(path="/users", method=RequestMethod.GET)
+	public String user_list (ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String userid ) {	
+		List<Map<String,Object>> list;
+		list = jdbcTemplate.queryForList("select * from user_table");
+		return list.toString();
     }
-    
-    @RequestMapping(path="/users", method=RequestMethod.GET)
-    public String user() {
-        List<Map<String,Object>> list;
-        list = jdbcTemplate.queryForList("select * from user_table");
-        return list.toString();
-    }
-    
-    @RequestMapping(path="/trips", method=RequestMethod.GET)
-    public String trip() {
-        List<Map<String,Object>> list;
-        list = jdbcTemplate.queryForList("select * from trip_table");
-        return list.toString();
-    }
+	
+	// search user_table based on id or name
+	@RequestMapping(path="/users/search", method=RequestMethod.GET)
+	public String user_search (ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String userid, @RequestParam(name="keyword", defaultValue= "") String keyword) {
+		if (userid.isEmpty() == false) {
+			List<Map<String,Object>> list;
+			list = jdbcTemplate.queryForList("select * from user_table where userid = ?", Integer.parseInt(userid));
+			return list.toString();
+		}
+		else if (keyword.isEmpty() == false) {
+			List<Map<String,Object>> list;
+			
+	    		// this is security-wise terribly terribly BAD, but let it be for now
+			String keywords[] = keyword.split(" ");	// split using space. 
+			
+			// only checks for first two elements
+			if (keywords[0].isEmpty() == false) {
+				keyword = "firstname ='" + keywords[0] + "' OR lastname = '" + keywords[0] + "'";
+			}
+			if (keywords[1].isEmpty() == false) {
+				keyword = keyword + " OR firstname ='" + keywords[1] + "' OR lastname = '" + keywords[1] + "' ";
+			}
+			
+			String query = "select * from user_table WHERE " + keyword;
+			list = jdbcTemplate.queryForList(query);
+			return list.toString();
+		}
+		else {
+			return "Usage: Send a POST request to \"/users/search?id={id}\" or \"/users/search?keyword={name}\"";
+		}
+	}
+	
+	
+	/* 
+	 * For trip data (DB: 'trip_table')
+	 */
+	
+	// return the list of trips
+	@RequestMapping(path="/trips", method=RequestMethod.GET)
+	public String trip() {
+		List<Map<String,Object>> list;
+		list = jdbcTemplate.queryForList("select * from trip_table");
+		return list.toString();
+	}
        
-    @RequestMapping(path="/search", method=RequestMethod.POST)
-    public String trip_search(ModelMap modelMap, @RequestParam("dep") String departure, 
-    		@RequestParam("dest") String destination, @RequestParam("date") String date, @RequestParam("seats") String seats) {
-    	
-    	
-    		if (departure != "") { departure = "departure_location='" + departure + "'"; }
-    		if (destination != "") { destination = "AND destinations='" + destination + "'"; }
-    		if (date != "") { date = "AND departure_date='" + date + "'"; }
-    		if (seats != "") { date = "AND seats_available>='" + seats + "'"; }
+	// searching trips based on queries
+	@RequestMapping(path="/trips/search", method=RequestMethod.GET)
+	public String trip_search(ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String tripid, @RequestParam(name="dep", defaultValue="") String departure, 
+			@RequestParam(name="dest", defaultValue="") String destination, @RequestParam(name="date", defaultValue="") String date, 
+			@RequestParam(name="seats", defaultValue="") String seats) {
+		if (tripid.isEmpty() == false) {
+			List<Map<String,Object>> list;
+			list = jdbcTemplate.queryForList("select * from trip_table where trip_id = ?", Integer.parseInt(tripid));
+			return list.toString();
+		}
+		else if (departure.isEmpty() == false) {
+			if (departure.isEmpty() == false) { departure = "departure_location='" + departure + "'"; } else { return "Error. "; }
+    			if (destination.isEmpty() == false) { destination = "AND destinations='" + destination + "'"; }
+    			if (date.isEmpty() == false) { date = "AND departure_date='" + date + "'"; }
+    			if (seats.isEmpty() == false) { date = "AND seats_available>='" + seats + "'"; }
     		
-    		List<Map<String,Object>> list;
-    		// this is security-wise terribly terribly BAD, but leave as is for now
-    		String query = "select * from trip_table WHERE " + departure + destination + date;
-        list = jdbcTemplate.queryForList(query);
-        return list.toString();
+    			List<Map<String,Object>> list;
+    			// this is security-wise terribly terribly BAD, but leave as is for now
+    			String query = "select * from trip_table WHERE " + departure + destination + date;
+    			list = jdbcTemplate.queryForList(query);
+    			return list.toString();
+		}
+		else {
+			return "Usage: Send a POST request to \"/trips/search?dep={departure_location}&dest={destination}&date={departure_date}&seats={seats_required}\"";
+		}
+    		
     }
     
+    /*
+     * API for Writing into Database
+     */
     
-    @RequestMapping(path="/users/{id}", method=RequestMethod.GET)
-    public String read(@PathVariable String id) {
-        List<Map<String,Object>> list;
-        list = jdbcTemplate.queryForList("select * from user_table where userid = ?", Integer.parseInt(id));
-        return list.toString();
-    }
-    
-    @RequestMapping(path="/trips/{id}", method=RequestMethod.GET)
-    public String readTripTable(@PathVariable String id) {
-        List<Map<String,Object>> list;
-        list = jdbcTemplate.queryForList("select * from trip_table where trip_id = ?", Integer.parseInt(id));
-        return list.toString();
-    }
- 
     //Creates a new user by taking all of the below-specified inputs
     @PostMapping("/users/{firstName}/{lastName}/{email}/{phoneNumber}/{password}/{isAdmin}")
 	public String createUser(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName, @PathVariable("email") String email,
