@@ -2,13 +2,17 @@
 Springboot backend implementation for the ride-sharing service. 
 
 ### Changelog
+Oct.4, 2018: Adding Users/Trips and Deleting Users/Trips:
+- Added a public method in the user and trip classes that takes all of their data, formulates a SQL query and inserts the row into the associated table (there appears to still be some errors in this portion, getting a NULL Pointer Exception)
+- Added methods in the main application that delete a user or trip from the associated table based on ID
+- Reconfigured the Trip class to use LocalDate and LocalTime instead of previous setup since it works natively with PostgreSQL
+
 Oct.3, 2018: Search component: 
 - Changed the URI for searching trips to "/trips/search". Returns usage if no queries given. 
 Usage: Send a POST request to "/trips/search?dep={departure_location}&dest={destination}&date={departure_date}&seats={seats_required}"
 - Added the user search to "/users/search". Returns usage if no queries given. 
 Queries: id (userid), keyword (firstname, lastname, or both but separated using space)
 Usage: Send a POST request to "/users/search?id={id}" or "/users/search?keyword={name}"
-
 
 Oct.2, 2018: Added REST GET Method to create new Trip and User objects
 - Each method currently takes a lot of input (all that is necessary to create a trip or user) and formats it as appropriate then creates an object from this
@@ -32,7 +36,6 @@ Sep.30, 2018: Added Trip and User classes
 - Both have getters and setters for the fields that I believe are necessary to access/alter, this can be easily expanded upon if we discover we need to
 - Other methods are also included, like ones to add/remove users from a trip or to update the average driver/passenger rating of a user
 - No connection has been made yet to the database or the RESTful API, just the creation of the classes
-
 
 Sep.29, 2018: It reads the database now. 
 - / returns Hello world. 
