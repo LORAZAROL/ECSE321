@@ -1,6 +1,16 @@
 package com.ecse321.RideShare.model;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 public class User {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
 	private static int idCounter = 1; //A counter that is incremented every time a User is created, so no two ID's are equal
 	private final int userID; //User ID is final since it should never be changed
 	private final Boolean isAdmin; //isAdmin is final since it should never be changed
@@ -85,6 +95,16 @@ public class User {
 		this.totalDriverTrips++;
 		//Running average without storing a sum of all ratings
 		this.driverRating = (this.driverRating * (this.totalDriverTrips - 1) + newestRating)/this.totalDriverTrips;
+	}
+	
+	/*
+	 *Creating and Deleting Users from Database Table
+	 */
+	public void addToDatabase() {
+		List<Map<String,Object>> list;
+		list = jdbcTemplate.queryForList("INSERT INTO user_table (userid, admin, firstname, lastname, email, phone, password, preferences, driver_rating, passenger_rating)"
+				+ "VALUES (" + this.userID + ", " + this.isAdmin + ", '" + this.firstName + "', '" + this.lastName + "', '" + this.email + "', '" + this.phoneNumber + "', '"
+				+ this.password + "', '" + this.preferences + "', " + this.driverRating + ", " + this.passengerRating +")");
 	}
 	
 }

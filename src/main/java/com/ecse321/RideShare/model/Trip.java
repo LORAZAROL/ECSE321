@@ -4,15 +4,26 @@ import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class Trip {
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
 	private static int tripIDCounter = 1; //Counter to ensure no two tripIDs are the same
 	private final int tripID;
 	private final int driverID; //This will be passed in when the trip is created and shouldn't change
 	private final String driverEmail; //Driver contact info should also not change since it references the driver's user data
 	private final String driverPhoneNumber;
 	
-	private Date departureDate; //this includes date and time
+	private LocalDate departureDate; //this is just date part
+	private LocalTime departureTime; //this is just the time part
 	private String departureLocation;
 	private ArrayList<String> destinations = new ArrayList<String>();
 	private ArrayList<Float> tripDurations = new ArrayList<Float>();
@@ -24,7 +35,7 @@ public class Trip {
 	private String licensePlate;
 	private String otherComments;
 
-	public Trip(int driverID, String driverEmail, String driverPhone, String date, String depLocation, ArrayList<String> destinations, 
+	public Trip(int driverID, String driverEmail, String driverPhone, String date, String time, String depLocation, ArrayList<String> destinations, 
 			ArrayList<Float> tripDurations, ArrayList<Float> prices, int seats, String vehicleType, String licensePlate, String comments) {
 		tripID = tripIDCounter;
 		tripIDCounter++;
@@ -32,7 +43,8 @@ public class Trip {
 		this.driverEmail = driverEmail;
 		this.driverPhoneNumber = driverPhone;
 		
-		this.departureDate = parseDate(date);
+		this.departureDate = LocalDate.parse(date);
+		this.departureTime = LocalTime.parse(time);
 		this.departureLocation = depLocation;
 		this.destinations = destinations;
 		this.tripDurations = tripDurations;
@@ -49,8 +61,11 @@ public class Trip {
 	public int getTripID() {
 		return this.tripID;
 	}
-	public Date getDepartureDate() {
+	public LocalDate getDepartureDate() {
 		return this.departureDate;
+	}
+	public LocalTime getDepartureTime() {
+		return this.departureTime;
 	}
 	public String getDepartureLocation() { 
 		return this.departureLocation;
@@ -82,6 +97,7 @@ public class Trip {
 	}
 	
 	//Method that takes a String formatted in the manner shown below and turns it into a date format object
+	/*
 	private static Date parseDate(String date) { 
 		//use sql.date instead of util.date
 		try {
@@ -91,5 +107,28 @@ public class Trip {
 		} catch (ParseException e) {
             return null;
         }
-	}	
+	}
+	*/
+	
+	public void addToDatabase() {
+		List<Map<String,Object>> list;
+		list = jdbcTemplate.queryForList("INSERT INTO trip_table (trip_id, driver_id, departure_date, departure_time, departure_location, durations, destinations, seats_available, passenger_id, prices, vehicle_type, licence_plate, contact_no, comments)"
+				+ "VALUES (" + this.tripID + ", " + this.driverID + ", '" + this.departureDate + "', '" + this.departureTime + "', '" + this.departureLocation + "', '{" + arrayListToString(this.tripDurations) + "}', '{"
+				+ arrayListToString(this.destinations) + "}', " + this.availableSeats + ", '{" + arrayListToString(this.passengerIDList) + "}', '{" + arrayListToString(this.prices) + "}', '" + this.vehicleType + "', '" + this.licensePlate + "', '" + this.driverPhoneNumber + "', '" + this.otherComments + "')");
+	}
+	
+	//Used to turn the elements of an ArrayList into a String separated by commas (useful for addition to database table)
+	private String arrayListToString(ArrayList list) {
+		String string = "";
+		
+		for (int i=0; i<list.size(); i++) {
+			string = string + list.get(i);
+			if (i != (list.size() - 1)) {
+				string = string + ", ";
+			}
+		}
+		
+		return string;
+	}
+	
 }
