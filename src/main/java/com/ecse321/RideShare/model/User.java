@@ -4,12 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.ecse321.RideShare.RideShareService;
+
+@ComponentScan("com.ecse321.RideShare.*")
 
 public class User {
 	
 	@Autowired
+	RideShareService service;
+	
 	JdbcTemplate jdbcTemplate;
+	
+	//JdbcTemplate jdbcTemplate;
 	
 	private static int idCounter = 1; //A counter that is incremented every time a User is created, so no two ID's are equal
 	private final int userID; //User ID is final since it should never be changed
@@ -41,6 +50,7 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.password = password;
 		this.isAdmin = isAdmin;
+		this.preferences = "";
 		this.passengerRating = 4.0f;
 		this.driverRating = 4.0f;
 		
@@ -52,6 +62,10 @@ public class User {
 	//All getter methods
 	public int getUserID() {
 		return this.userID;
+	}
+	
+	public boolean getIsAdmin() {
+		return this.isAdmin;
 	}
 	
 	public String getFirstName() {
@@ -72,6 +86,10 @@ public class User {
 	
 	public String getPreferences() {
 		return this.preferences;
+	}
+	
+	public String getPassword() {
+		return this.password;
 	}
 	
 	public float getPassengerRating() {
@@ -96,15 +114,5 @@ public class User {
 		//Running average without storing a sum of all ratings
 		this.driverRating = (this.driverRating * (this.totalDriverTrips - 1) + newestRating)/this.totalDriverTrips;
 	}
-	
-	/*
-	 *Creating and Deleting Users from Database Table
-	 */
-	public void addToDatabase() {
-		List<Map<String,Object>> list;
-		list = jdbcTemplate.queryForList("INSERT INTO user_table (userid, admin, firstname, lastname, email, phone, password, preferences, driver_rating, passenger_rating)"
-				+ "VALUES (" + this.userID + ", " + this.isAdmin + ", '" + this.firstName + "', '" + this.lastName + "', '" + this.email + "', '" + this.phoneNumber + "', '"
-				+ this.password + "', '" + this.preferences + "', " + this.driverRating + ", " + this.passengerRating +")");
-	}
-	
+		
 }

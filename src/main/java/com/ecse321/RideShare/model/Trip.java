@@ -10,10 +10,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.ecse321.RideShare.RideShareService;
+
+@ComponentScan("com.ecse321.RideShare.*")
 
 public class Trip {
 	@Autowired
+	RideShareService service;
+	
 	JdbcTemplate jdbcTemplate;
 	
 	private static int tripIDCounter = 1; //Counter to ensure no two tripIDs are the same
@@ -61,6 +68,9 @@ public class Trip {
 	public int getTripID() {
 		return this.tripID;
 	}
+	public int getDriverID() {
+		return this.driverID;
+	}
 	public LocalDate getDepartureDate() {
 		return this.departureDate;
 	}
@@ -70,8 +80,14 @@ public class Trip {
 	public String getDepartureLocation() { 
 		return this.departureLocation;
 	}
+	public ArrayList<Float> getTripDurations() {
+		return this.tripDurations;
+	}
 	public ArrayList<String> getDestination() {
 		return this.destinations;
+	}
+	public ArrayList<Integer> getPassengerIDList() {
+		return this.passengerIDList;
 	}
 	public ArrayList<Float> getPrices() {
 		return this.prices;
@@ -79,6 +95,19 @@ public class Trip {
 	public int getSeats() {
 		return this.availableSeats;
 	}
+	public String getVehicleType() {
+		return this.vehicleType;
+	}
+	public String getLicencePlate() {
+		return this.licensePlate;
+	}
+	public String getDriverPhone() {
+		return this.driverPhoneNumber;
+	}
+	public String getComments() {
+		return this.otherComments;
+	}
+	
 	
 	/*
 	//Methods to add a user to the trip and remove a user from a trip. These update the list of passengers' user IDs and the available seats
@@ -112,25 +141,6 @@ public class Trip {
 	}
 	*/
 	
-	public void addToDatabase() {
-		List<Map<String,Object>> list;
-		list = jdbcTemplate.queryForList("INSERT INTO trip_table (trip_id, driver_id, departure_date, departure_time, departure_location, durations, destinations, seats_available, passenger_id, prices, vehicle_type, licence_plate, contact_no, comments)"
-				+ "VALUES (" + this.tripID + ", " + this.driverID + ", '" + this.departureDate + "', '" + this.departureTime + "', '" + this.departureLocation + "', '{" + arrayListToString(this.tripDurations) + "}', '{"
-				+ arrayListToString(this.destinations) + "}', " + this.availableSeats + ", '{" + arrayListToString(this.passengerIDList) + "}', '{" + arrayListToString(this.prices) + "}', '" + this.vehicleType + "', '" + this.licensePlate + "', '" + this.driverPhoneNumber + "', '" + this.otherComments + "')");
-	}
-	
-	//Used to turn the elements of an ArrayList into a String separated by commas (useful for addition to database table)
-	private String arrayListToString(ArrayList list) {
-		String string = "";
-		
-		for (int i=0; i<list.size(); i++) {
-			string = string + list.get(i);
-			if (i != (list.size() - 1)) {
-				string = string + ", ";
-			}
-		}
-		
-		return string;
-	}
+
 	
 }
