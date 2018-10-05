@@ -1,0 +1,28 @@
+CREATE TABLE trip_table (
+	trip_id int PRIMARY KEY, 
+	driver_id int,
+	departure_date date,
+	departure_time time, 
+	departure_location text,
+	durations numeric[],
+	destinations text[],
+	seats_available int,
+	passenger_id int[],
+	prices numeric[], 
+	vehicle_type text
+);
+
+INSERT INTO trip_table VALUES (
+	0, 
+	0,
+	'October 8, 2018',
+	'12:30',
+	'McGill',
+	'{0.50}', 
+	'{"Concordia", "UQAM"}', 
+	3, 
+	'{0}', 
+	'{3.25,5.20}',
+	'SUBARU WRX STi Blue Sedan'
+); 	
+	
