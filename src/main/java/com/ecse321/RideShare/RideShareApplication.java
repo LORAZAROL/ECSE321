@@ -152,6 +152,7 @@ public class RideShareApplication {
     /*
      * API for Writing into Database
      */
+	
     //Creates a new user by taking all of the below-specified inputs
     @PostMapping("/users/create")
 	public String createUser(@RequestParam(name="firstName", defaultValue= "") String firstName, @RequestParam(name="lastName", defaultValue="") String lastName, @RequestParam(name="email", defaultValue="") String email,
@@ -234,9 +235,43 @@ public class RideShareApplication {
     	}
     }
     
+    //Adds a user to a specified trip
+    @PostMapping("/trips/join")
+    public String joinTrip (ModelMap modelMap, @RequestParam(name="userID", defaultValue= "") String userID, @RequestParam(name="tripID", defaultValue= "") String tripID) {
+    	if (!userID.isEmpty() && !tripID.isEmpty()) {
+    		int userIDInt = Integer.parseInt(userID);
+    		int tripIDInt = Integer.parseInt(tripID);
+    		List<Map<String,Object>> list;
+    		list = jdbcTemplate.queryForList("UPDATE trip_table SET passenger_id = array_append(passenger_id,'" + userIDInt + "'), seats_available = (seats_available - 1) WHERE trip_id=? and seats_available>0", tripIDInt);
+    		return list.toString();
+    	}
+    	else {
+    		return "Usage: Send a POST request to \"/trips/join?userID={Your User ID}&tripID={Desired Trip ID}\"";
+    	}
+    	
+    }
+    
+    //Removes a user from a specified trip
+    @PostMapping("/trips/leave")
+    public String leaveTrip (ModelMap modelMap, @RequestParam(name="userID", defaultValue= "") String userID, @RequestParam(name="tripID", defaultValue= "") String tripID) {
+    	if (!userID.isEmpty() && !tripID.isEmpty()) {
+    		int userIDInt = Integer.parseInt(userID);
+    		int tripIDInt = Integer.parseInt(tripID);
+    		List<Map<String,Object>> list;
+    		list = jdbcTemplate.queryForList("UPDATE trip_table SET passenger_id = array_remove(passenger_id,'" + userIDInt + "'), seats_available = (seats_available + 1) WHERE trip_id=?", tripIDInt);
+    		return null;
+    	}
+    	else {
+    		return "Usage: Send a POST request to \"/trips/leave?userID={Your User ID}&tripID={Desired Trip ID}\"";
+    	}
+    }
+    
+    
+    
     /*
      * API for Deleting Database Rows
      */
+    
     //Used to delete a trip from the trip_table using the trip ID
     @DeleteMapping(path="/trips")
 	public String deleteTrip(ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String tripID) {
@@ -255,6 +290,7 @@ public class RideShareApplication {
     /*
      * Additional methods used to manipulate the data
      */
+    
     //Simple method to take a string and separate it by commas into an array (for user input)
     public String[] separateByComma(String input) {
     	String[] values = input.split("\\s*,\\s*");
