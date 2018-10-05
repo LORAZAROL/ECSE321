@@ -2,6 +2,9 @@
 Springboot backend implementation for the ride-sharing service. 
 
 ### Changelog
+Oct. 5, 2018: Fixing DB issue of the updates on Oct. 4. 
+- Added service class to handle the DB - so that injection does not fail.  
+
 Oct. 4, 2018: Joining and Leaving Trips:
 - Added two methods that use POST mapping to allow the user to add or join trips
 - They take 2 inputs: userID and tripID
