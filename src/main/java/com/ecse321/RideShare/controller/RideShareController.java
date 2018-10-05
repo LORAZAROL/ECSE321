@@ -245,8 +245,11 @@ public class RideShareController {
     		int userIDInt = Integer.parseInt(userID);
     		int tripIDInt = Integer.parseInt(tripID);
     		List<Map<String,Object>> list;
-    		list = jdbcTemplate.queryForList("UPDATE trip_table SET passenger_id = array_append(passenger_id,'" + userIDInt + "'), seats_available = (seats_available - 1) WHERE trip_id=? and seats_available>0", tripIDInt);
-    		return list.toString();
+    		String query = "UPDATE trip_table SET passenger_id = array_append(passenger_id,'" + userIDInt + "'), seats_available = (seats_available - 1) WHERE trip_id=" + tripID + " and seats_available>0";
+    		
+    		service.sqlInsert(query);
+    		
+    		return "Success";
     	}
     	else {
     		return "Usage: Send a POST request to \"/trips/join?userID={Your User ID}&tripID={Desired Trip ID}\"";
@@ -261,7 +264,10 @@ public class RideShareController {
     		int userIDInt = Integer.parseInt(userID);
     		int tripIDInt = Integer.parseInt(tripID);
     		List<Map<String,Object>> list;
-    		list = jdbcTemplate.queryForList("UPDATE trip_table SET passenger_id = array_remove(passenger_id,'" + userIDInt + "'), seats_available = (seats_available + 1) WHERE trip_id=?", tripIDInt);
+    		String query = "UPDATE trip_table SET passenger_id = array_remove(passenger_id,'" + userIDInt + "'), seats_available = (seats_available + 1) WHERE trip_id=" + tripID;
+    		
+    		service.sqlInsert(query);
+    		
     		return null;
     	}
     	else {
