@@ -2,6 +2,13 @@
 Springboot backend implementation for the ride-sharing service. 
 
 ### Changelog
+Oct. 4, 2018: Joining and Leaving Trips:
+- Added two methods that use POST mapping to allow the user to add or join trips
+- They take 2 inputs: userID and tripID
+- The associated userID will be added or removed from the trip associated with the tripID (depending on the method you use)
+- The available seats on the trip also change according to joining/leaving
+- Was not able to test functionality of this yet, waiting on reconfigure of trip_table column's data type (See Issue #13)
+
 Oct.4, 2018: Adding Users/Trips and Deleting Users/Trips:
 - Added a public method in the user and trip classes that takes all of their data, formulates a SQL query and inserts the row into the associated table (there appears to still be some errors in this portion, getting a NULL Pointer Exception)
 - Added methods in the main application that delete a user or trip from the associated table based on ID
