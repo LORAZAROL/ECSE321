@@ -49,7 +49,9 @@ public class RideShareController {
         		+ "See all users with a GET request: /users \n"
         		+ "See all trips with a GET request: /trips \n"
         		+ "Search for users with a POST request: /users/search \n"
-        		+ "Search for trips with a POST request: /trips/search";
+        		+ "Search for trips with a POST request: /trips/search \n \n"
+        		+ "Join a trip with a POST request: /trips/join \n"
+        		+ "Leave a trip with a POST request: /trips/leave";
 		}
 	
 /*
@@ -261,7 +263,7 @@ public class RideShareController {
     		
     		service.sqlInsert(query);
     		
-    		return "Success";
+    		return "Successfully Joined Trip!";
     	}
     	else {
     		return "Usage: Send a POST request to \"/trips/join?userID={Your User ID}&tripID={Desired Trip ID}\"";
@@ -280,7 +282,7 @@ public class RideShareController {
     		
     		service.sqlInsert(query);
     		
-    		return null;
+    		return "Successfully Left Trip";
     	}
     	else {
     		return "Usage: Send a POST request to \"/trips/leave?userID={Your User ID}&tripID={Desired Trip ID}\"";
