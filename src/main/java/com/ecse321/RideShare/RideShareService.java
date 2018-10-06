@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @ComponentScan("com.ecse321.RideShare.*")
 
+//This class handles all of the connections to the database so that injection does not fail
 public class RideShareService {
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
