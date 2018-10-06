@@ -2,6 +2,14 @@
 Springboot backend implementation for the ride-sharing service. 
 
 ### Changelog
+Oct. 6, 2018: Bug fixing for most API Endpoints
+- Altered the user search to work with any number of names separated by spaces
+- Fixed the trip search so that it properly searches for the destination in the array within the table column
+- Changed the method in the service class used by the delete endpoints to be sqlInsert so that it runs with the update commmand and doesn't return seemingly an error when it is working fine
+- Changed search methods and create methods to use .toLowerCase() for certain strings so that data isn't stored in the database with a random collection of upper/lower case if the user does so, and allows for searches that wont fail
+- Cleaned up leftover commented code that has long since been abandoned
+- Added further comments to sections for readability
+
 Oct. 5, 2018: Fixing DB issue of the updates on Oct. 4. 
 - Added service class to handle the DB - so that injection does not fail.  
 
