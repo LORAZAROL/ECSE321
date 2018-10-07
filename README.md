@@ -5,6 +5,9 @@ HOW TO USE:
 1. Using a REST client, send a GET request to "/instructions" to be provided with a list of actions
 2. Sending the associated request for any of those instructions will provide you with the required parameters that must be entered (if necessary)
 
+NOTE:
+- Persistence is handled in the application through direct injection to the postgreSQL database. Database contents are saved automatically after all changes because of this.
+
 ### Changelog
 Oct. 7, 2018: Fixed unintended cases for Join/Leave
 - Previously you could Join a trip even if your passenger ID was already on the list, adding you twice and taking another seat
