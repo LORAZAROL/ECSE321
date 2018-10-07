@@ -48,16 +48,16 @@ public class Trip {
 	private String departureLocation;
 	
 	//dependencies need to be confirmed
-	@Type(type = "string-array")
+	//@Type(type = "string-array")
 	@Column(name = "destinations",columnDefinition="text[]")
 	private String[] destinations1;
-	@Type(type = "float-array")
+	//@Type(type = "float-array")
 	@Column(name = "durations",columnDefinition="text[]")
 	private float[] tripDurations1;
-	@Type(type = "float-array")
+	//@Type(type = "float-array")
 	@Column(name = "prices",columnDefinition="text[]")
 	private float[] prices1;
-	@Type(type = "int-array")
+	//@Type(type = "int-array")
 	@Column(name = "passenger_id")
 	private int[] pId;
 	
@@ -255,6 +255,4 @@ public class Trip {
 		return tmp;
 	}
 	
-=======
->>>>>>> 6b46d751b7dc0f7a0c7e6f54ad59ceb9b702c799
 }
