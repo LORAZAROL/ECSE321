@@ -2,6 +2,13 @@
 Springboot backend implementation for the ride-sharing service. 
 
 ### Changelog
+Oct. 6, 2018: Added JUnit tests for User and Trip classes
+- 4 JUnit tests were added
+- One to test some of the getters and setters of the User class
+- One to test some of the getters and setters of the Trip class
+- One to test the update driver/passenger rating methods of the User class
+- One to test the isValidFormat function in Controller properly works with date formats
+
 Oct. 6, 2018: Bug fixing for most API Endpoints
 - Altered the user search to work with any number of names separated by spaces
 - Fixed the trip search so that it properly searches for the destination in the array within the table column
