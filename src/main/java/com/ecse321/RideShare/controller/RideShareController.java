@@ -259,7 +259,7 @@ public class RideShareController {
     		int userIDInt = Integer.parseInt(userID);
     		int tripIDInt = Integer.parseInt(tripID);
     		List<Map<String,Object>> list;
-    		String query = "UPDATE trip_table SET passenger_id = array_append(passenger_id,'" + userIDInt + "'), seats_available = (seats_available - 1) WHERE trip_id=" + tripID + " and seats_available>0";
+    		String query = "UPDATE trip_table SET passenger_id = array_append(passenger_id,'" + userIDInt + "'), seats_available = (seats_available - 1) WHERE trip_id=" + tripID + " and seats_available>0 AND NOT (" + userIDInt + "= ANY (passenger_id))";
     		
     		service.sqlInsert(query);
     		
@@ -278,7 +278,7 @@ public class RideShareController {
     		int userIDInt = Integer.parseInt(userID);
     		int tripIDInt = Integer.parseInt(tripID);
     		List<Map<String,Object>> list;
-    		String query = "UPDATE trip_table SET passenger_id = array_remove(passenger_id,'" + userIDInt + "'), seats_available = (seats_available + 1) WHERE trip_id=" + tripID;
+    		String query = "UPDATE trip_table SET passenger_id = array_remove(passenger_id,'" + userIDInt + "'), seats_available = (seats_available + 1) WHERE trip_id=" + tripID + " AND " + userIDInt + "= ANY (passenger_id)";
     		
     		service.sqlInsert(query);
     		
