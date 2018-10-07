@@ -36,7 +36,7 @@ public class RideShareController {
 
 	@RequestMapping(path="/")
 	public String greeting() {
-		return "Hello, world! ";
+		return "Welcome to the Rideshare Service! Use \"/instructions\" to receive a list of commands!";
 	}
 	
 	//Created a new path just to provide the instructions on how to create a new user or trip
@@ -49,7 +49,9 @@ public class RideShareController {
         		+ "See all users with a GET request: /users \n"
         		+ "See all trips with a GET request: /trips \n"
         		+ "Search for users with a POST request: /users/search \n"
-        		+ "Search for trips with a POST request: /trips/search";
+        		+ "Search for trips with a POST request: /trips/search \n \n"
+        		+ "Join a trip with a POST request: /trips/join \n"
+        		+ "Leave a trip with a POST request: /trips/leave";
 		}
 	
 /*
@@ -77,20 +79,21 @@ public class RideShareController {
 		}
 		else if (keyword.isEmpty() == false) {
 			List<Map<String,Object>> list;
+			String keywords[] = (keyword.toLowerCase()).split(" ");	// split using space after making everything lowercase
+			String searchTerm = "";
 			
-	    		// this is security-wise terribly terribly BAD, but let it be for now
-			String keywords[] = keyword.split(" ");	// split using space. 
-			
-			// only checks for first two elements
-			if (keywords[0].isEmpty() == false) {
-				keyword = "firstname ='" + keywords[0] + "' OR lastname = '" + keywords[0] + "'";
+			//Checks all of the keywords from the search, separated by commas
+			for (int i = 0; i < keywords.length; i++) {
+				if (keywords[i].isEmpty() == false) {
+					if (i != 0) {
+						searchTerm = searchTerm + " OR ";
+					}
+					searchTerm = searchTerm + "firstname ='" + keywords[i] + "' OR lastname = '" + keywords[i] + "'";
+				}
+				
 			}
-			if (keywords[1].isEmpty() == false) {
-				keyword = keyword + " OR firstname ='" + keywords[1] + "' OR lastname = '" + keywords[1] + "' ";
-			}
 			
-			String query = "select * from user_table WHERE " + keyword;
-			
+			String query = "select * from user_table WHERE " + searchTerm;
 			list = service.executeSQL(query);
 			return list.toString();
 		}
@@ -123,19 +126,30 @@ public class RideShareController {
 			return list.toString();
 		}
 		else if (departure.isEmpty() == false) {
-			if (departure.isEmpty() == false) { departure = "departure_location='" + departure + "'"; } else { return "Error. "; }
-    			if (destination.isEmpty() == false) { destination = "AND destinations='" + destination + "'"; }
-    			if (date.isEmpty() == false) { date = "AND departure_date='" + date + "'"; }
-    			if (seats.isEmpty() == false) { date = "AND seats_available>='" + seats + "'"; }
-    		
-    			List<Map<String,Object>> list;
-    			// this is security-wise terribly terribly BAD, but leave as is for now
-    			String query = "select * from trip_table WHERE " + departure + destination + date;
-    			list = service.executeSQL(query);
-    			return list.toString();
+			departure = "departure_location='" + departure.toLowerCase() + "'";
+			if (destination.isEmpty() == false) { 
+				destination = "AND '" + destination.toLowerCase() + "'= ANY (destinations)";  //This particular syntax is required due to a search within an array
+			}
+			if (date.isEmpty() == false) { 
+				if (!isValidFormat(date, "yyyy-MM-dd")) {
+	    			return "Please enter the Departure Date in the following format: yyyy-MM-dd";
+	    		}
+				else {
+					date = "AND departure_date='" + date + "'"; 
+				}
+			}
+			if (seats.isEmpty() == false) { 
+				seats = "AND seats_available>='" + seats + "'"; 
+			}
+		
+			List<Map<String,Object>> list;
+			String query = "select * from trip_table WHERE " + departure + destination + date + seats + " ORDER BY departure_time ASC";
+			list = service.executeSQL(query);
+			return list.toString();
 		}
 		else {
-			return "Usage: Send a POST request to \"/trips/search?dep={departure_location}&dest={destination}&date={departure_date}&seats={seats_required}\"";
+			return "Usage: Send a POST request to \"/trips/search?dep={departure_location}&dest={destination}&date={departure_date}&seats={seats_required}\" \n"
+					+ "Note that, at minimum, either a specific Trip ID or a Departure Location is required";
 		}
     		
     }
@@ -157,7 +171,7 @@ public class RideShareController {
     			}
     			
     			//Creates the object and returns a confirmation message that it worked
-    			User newUser = new User (firstName, lastName, email, phoneNumber, password, isAdmin);
+    			User newUser = new User (firstName.toLowerCase(), lastName.toLowerCase(), email, phoneNumber, password, isAdmin);
     			
     			String query = ("INSERT INTO user_table (admin, firstname, lastname, email, phone, password, driver_rating, passenger_rating)"
 						+ "VALUES ("+ newUser.getIsAdmin() + ", '" + newUser.getFirstName() + "', '" + newUser.getLastName() + "', '" + newUser.getEmail() + "', '" + newUser.getPhoneNumber() + "', '"
@@ -198,7 +212,7 @@ public class RideShareController {
     	    		}
     	    		else {
     	    			//Array Lists receive their data as pure string (with commas to separate) from the URL and use below methods to create a separated list from that
-    	    			ArrayList<String> destinationList = new ArrayList<String>(Arrays.asList(separateByComma(destinations)));
+    	    			ArrayList<String> destinationList = new ArrayList<String>(Arrays.asList(separateByComma(destinations.toLowerCase())));
     		    	
     	    			//Duration and Prices need to be in float format but are input as strings, so they are converted first
     	    			String[] strDuration = separateByComma(tripDurations);
@@ -210,7 +224,7 @@ public class RideShareController {
     	    			ArrayList<Float> pricesList = new ArrayList<Float>(Arrays.asList(floatPrices));
     		    	
     	    			//Creates the object and returns a confirmation message that it worked
-    	    			Trip newTrip = new Trip (driverID, driverEmail, driverPhone, date, time, depLocation, destinationList, tripDurationList, pricesList, seats, vehicleType, licensePlate, comments);
+    	    			Trip newTrip = new Trip (driverID, driverEmail, driverPhone, date, time, depLocation.toLowerCase(), destinationList, tripDurationList, pricesList, seats, vehicleType, licensePlate, comments);
     	    			
     	    			String query = "INSERT INTO trip_table (trip_id, driver_id, departure_date, departure_time, departure_location, durations, destinations, seats_available, passenger_id, prices, vehicle_type, licence_plate, contact_no, comments)"
 	    						+ "VALUES (" + newTrip.getTripID() + ", " + newTrip.getDriverID() + ", '" + newTrip.getDepartureDate() + "', '" + newTrip.getDepartureTime() + "', '" + newTrip.getDepartureLocation() + "', '{" + arrayListToString(newTrip.getTripDurations()) + "}', '{"
@@ -249,7 +263,7 @@ public class RideShareController {
     		
     		service.sqlInsert(query);
     		
-    		return "Success";
+    		return "Successfully Joined Trip!";
     	}
     	else {
     		return "Usage: Send a POST request to \"/trips/join?userID={Your User ID}&tripID={Desired Trip ID}\"";
@@ -268,7 +282,7 @@ public class RideShareController {
     		
     		service.sqlInsert(query);
     		
-    		return null;
+    		return "Successfully Left Trip";
     	}
     	else {
     		return "Usage: Send a POST request to \"/trips/leave?userID={Your User ID}&tripID={Desired Trip ID}\"";
@@ -284,16 +298,28 @@ public class RideShareController {
     //Used to delete a trip from the trip_table using the trip ID
     @DeleteMapping(path="/trips")
 	public String deleteTrip(ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String tripID) {
-		List<Map<String,Object>> list;
-		list = jdbcTemplate.queryForList("DELETE FROM trip_table WHERE trip_id = ?", Integer.parseInt(tripID));
-		return "Trip with a trip ID of: " + tripID + " was deleted.";
+		if (!tripID.isEmpty()) {
+			String query = "DELETE FROM trip_table WHERE trip_id = " + Integer.parseInt(tripID);
+			service.sqlInsert(query);
+			return "Trip with a trip ID of: " + tripID + " was deleted.";
+		}
+		else {
+			return "Usage: Send a DELETE request to \"/trips?id={Trip ID}\"";
+		}
+    	
 	}
     //Used to delete a user from the user_table using the user ID
     @DeleteMapping(path="/users")
 	public String deleteUser(ModelMap modelMap, @RequestParam(name="id", defaultValue= "") String userID) {
-		List<Map<String,Object>> list;
-		list = jdbcTemplate.queryForList("DELETE FROM user_table WHERE userid = ?", Integer.parseInt(userID));
-		return "User with a user ID of: " + userID + " was deleted.";
+		if (!userID.isEmpty()) {
+			String query = "DELETE FROM user_table WHERE userid = " + Integer.parseInt(userID);
+			service.sqlInsert(query);
+			return "User with a user ID of: " + userID + " was deleted.";
+		}
+		else {
+			return "Usage: Send a DELETE request to \"/users?id={User ID}\"";
+		}
+    	
 	}
     
     /*
@@ -346,7 +372,6 @@ public class RideShareController {
         return false;
     }
     
-	
 	//Used to turn the elements of an ArrayList into a String separated by commas (useful for addition to database table)
 	private String arrayListToString(ArrayList list) {
 		String string = "";

@@ -79,39 +79,30 @@ public class User {
 	public int getUserID() {
 		return this.userID;
 	}
-	
 	public boolean getIsAdmin() {
 		return this.isAdmin;
 	}
-	
 	public String getFirstName() {
 		return this.firstName;
 	}
-	
 	public String getLastName() {
 		return this.lastName;
 	}
-	
 	public String getEmail() {
 		return this.email;
 	}
-	
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
-	
 	public String getPreferences() {
 		return this.preferences;
 	}
-	
 	public String getPassword() {
 		return this.password;
 	}
-	
 	public float getPassengerRating() {
 		return this.passengerRating;
 	}
-	
 	public float getDriverRating() {
 		return this.driverRating;
 	}

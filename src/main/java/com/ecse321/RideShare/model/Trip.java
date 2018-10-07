@@ -141,24 +141,12 @@ public class Trip {
 		return this.otherComments;
 	}
 	
-	
-	/*
-	//Methods to add a user to the trip and remove a user from a trip. These update the list of passengers' user IDs and the available seats
-	public void joinTrip(int userID) {
-		this.passengerIDList.add(userID);
-		this.availableSeats--;
-	}
-	public void leaveTrip(int userID) {
-		this.passengerIDList.remove(userID);
-		this.availableSeats++;
-	}
-	*/
-	
 	//Likely don't want drivers changing a lot of the info on their trip, because you don't want existing passengers blind-sided
 	//by a sudden change to price or destination, etc. So not many things need to be set after the fact
 	public void setOtherComments(String comments) {
 		this.otherComments = comments;
 	}
+<<<<<<< HEAD
 	
 	//Method that takes a String formatted in the manner shown below and turns it into a date format object
 	/*
@@ -191,4 +179,6 @@ public class Trip {
 		return tmp;
 	}
 	
+=======
+>>>>>>> 6b46d751b7dc0f7a0c7e6f54ad59ceb9b702c799
 }
