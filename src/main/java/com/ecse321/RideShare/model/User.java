@@ -26,7 +26,8 @@ public class User {
 	private static int idCounter = 1; //A counter that is incremented every time a User is created, so no two ID's are equal
 	
 	@Id
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	@Column(name = "userid")
 	private final int userID; //User ID is final since it should never be changed
 	@Column(name = "admin")

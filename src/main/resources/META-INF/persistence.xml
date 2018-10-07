@@ -7,7 +7,7 @@
           <properties>
           	<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://ec2-54-83-23-91.compute-1.amazonaws.com:5432/d8bgo78gffeehq"/>
          	<property name="javax.persistence.jdbc.user" value="mrvqbrcudcntmg"/>
-         	<property name="javax.persistence.jdbc.password" value="root"/>
+         	<property name="javax.persistence.jdbc.password" value="fec18f513c91965d21b9f51a09270158ce57b52543145ec84986a9c6270217b4"/>
          	<property name="javax.persistence.jdbc.driver" value="fec18f513c91965d21b9f51a09270158ce57b52543145ec84986a9c6270217b4" />         	
           </properties>
         

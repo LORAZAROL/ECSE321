@@ -32,6 +32,7 @@ public class Trip {
 	
 	private static int tripIDCounter = 1; //Counter to ensure no two tripIDs are the same
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "trip_id")
 	private final int tripID;
 	@Column(name = "driver_id")
