@@ -254,7 +254,4 @@ public class Trip {
 		}
 		return tmp;
 	}
-	
-=======
->>>>>>> 6b46d751b7dc0f7a0c7e6f54ad59ceb9b702c799
 }
