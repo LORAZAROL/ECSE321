@@ -144,10 +144,85 @@ public class Trip {
 	
 	//Likely don't want drivers changing a lot of the info on their trip, because you don't want existing passengers blind-sided
 	//by a sudden change to price or destination, etc. So not many things need to be set after the fact
+	public String[] getDestinations1() {
+		return destinations1;
+	}
+
+	public void setDestinations1(String[] destinations1) {
+		this.destinations1 = destinations1;
+	}
+
+	public int[] getpId() {
+		return pId;
+	}
+
+	public void setpId(int[] pId) {
+		this.pId = pId;
+	}
+
+	public ArrayList<String> getDestinations() {
+		return destinations;
+	}
+
+	public void setDestinations(ArrayList<String> destinations) {
+		this.destinations = destinations;
+	}
+
+	public int getAvailableSeats() {
+		return availableSeats;
+	}
+
+	public void setAvailableSeats(int availableSeats) {
+		this.availableSeats = availableSeats;
+	}
+
+	public String getLicensePlate() {
+		return licensePlate;
+	}
+
+	public void setLicensePlate(String licensePlate) {
+		this.licensePlate = licensePlate;
+	}
+
+	public String getDriverEmail() {
+		return driverEmail;
+	}
+
+	public String getDriverPhoneNumber() {
+		return driverPhoneNumber;
+	}
+
+	public void setDepartureDate(LocalDate departureDate) {
+		this.departureDate = departureDate;
+	}
+
+	public void setDepartureTime(LocalTime departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	public void setDepartureLocation(String departureLocation) {
+		this.departureLocation = departureLocation;
+	}
+
+	public void setTripDurations(ArrayList<Float> tripDurations) {
+		this.tripDurations = tripDurations;
+	}
+
+	public void setPrices(ArrayList<Float> prices) {
+		this.prices = prices;
+	}
+
+	public void setPassengerIDList(ArrayList<Integer> passengerIDList) {
+		this.passengerIDList = passengerIDList;
+	}
+
+	public void setVehicleType(String vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
 	public void setOtherComments(String comments) {
 		this.otherComments = comments;
 	}
-<<<<<<< HEAD
 	
 	//Method that takes a String formatted in the manner shown below and turns it into a date format object
 	/*

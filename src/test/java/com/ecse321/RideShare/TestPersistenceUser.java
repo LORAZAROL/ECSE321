@@ -16,13 +16,18 @@ public class TestPersistenceUser {
 	
 	@Test
 	public void init() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("QuickStart");
-		EntityManager em = emf.createEntityManager();
-		
-		em.getTransaction().begin();
-		User pass = new User("a","b","c","d","e",true);
-		em.persist(pass);
-		em.getTransaction().commit();
-		emf.close();
+		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "QuickStart" ); 
+	    EntityManager entitymanager = emfactory.createEntityManager( );
+	    entitymanager.getTransaction( ).begin( );
+	    
+	    User u = new User("fir", "la", "@mail", "5555555555", "password", true);
+	    
+	    entitymanager.persist(u);
+	    entitymanager.getTransaction( ).commit( );
+
+	    entitymanager.close( );
+	    emfactory.close( );
+	    
+	    System.out.println(u);
 	}
 }

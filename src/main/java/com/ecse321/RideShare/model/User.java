@@ -55,7 +55,7 @@ public class User {
 	private float driverRating;
 	private int totalDriverTrips;
 	
-	
+	}
 	//Class constructor for the user
 	public User(String firstName, String lastName, String email, String phoneNumber, String password, Boolean isAdmin) {
 		//Set all of the info for the user given the input
@@ -108,6 +108,50 @@ public class User {
 		return this.driverRating;
 	}
 	
+	public int getTotalPassengerTrips() {
+		return totalPassengerTrips;
+	}
+
+	public void setTotalPassengerTrips(int totalPassengerTrips) {
+		this.totalPassengerTrips = totalPassengerTrips;
+	}
+
+	public int getTotalDriverTrips() {
+		return totalDriverTrips;
+	}
+
+	public void setTotalDriverTrips(int totalDriverTrips) {
+		this.totalDriverTrips = totalDriverTrips;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setPassengerRating(float passengerRating) {
+		this.passengerRating = passengerRating;
+	}
+
+	public void setDriverRating(float driverRating) {
+		this.driverRating = driverRating;
+	}
+
 	//All setter methods
 	public void setPreferences(String preferences) {
 		this.preferences = preferences;
