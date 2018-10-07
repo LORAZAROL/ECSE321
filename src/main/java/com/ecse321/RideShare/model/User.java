@@ -6,13 +6,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
+import javax.persistence.*;
 
 import com.ecse321.RideShare.RideShareService;
 
 @ComponentScan("com.ecse321.RideShare.*")
 
+@Entity
+@Table(name = "user_table")
 public class User {
-	
+		
 	@Autowired
 	RideShareService service;
 	
@@ -21,20 +24,33 @@ public class User {
 	//JdbcTemplate jdbcTemplate;
 	
 	private static int idCounter = 1; //A counter that is incremented every time a User is created, so no two ID's are equal
+	
+	@Id
+	
+	@Column(name = "userid")
 	private final int userID; //User ID is final since it should never be changed
+	@Column(name = "admin")
 	private final Boolean isAdmin; //isAdmin is final since it should never be changed
 	
 	//All basic user information
+	@Column(name = "firstname")
 	private String firstName;
+	@Column(name = "lastname")
 	private String lastName;
+	@Column(name = "email")
 	private String email;
+	@Column(name = "phone")
 	private String phoneNumber;
+	@Column(name = "password")
 	private String password;
+	@Column(name = "preferences")
 	private String preferences;
 	
 	//Ratings are assumed to be on a 0-5 system right now, they will start at 4. Total trips are needed to average rating
+	@Column(name = "passenger_rating")
 	private float passengerRating;
 	private int totalPassengerTrips;
+	@Column(name = "driver_rating")
 	private float driverRating;
 	private int totalDriverTrips;
 	
@@ -114,5 +130,16 @@ public class User {
 		//Running average without storing a sum of all ratings
 		this.driverRating = (this.driverRating * (this.totalDriverTrips - 1) + newestRating)/this.totalDriverTrips;
 	}
+
+	//This can be used in test to show whether database and code communicate successfully
+	@Override
+	public String toString() {
+		return "User [service=" + service + ", jdbcTemplate=" + jdbcTemplate + ", userID=" + userID + ", isAdmin="
+				+ isAdmin + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", phoneNumber=" + phoneNumber + ", password=" + password + ", preferences=" + preferences
+				+ ", passengerRating=" + passengerRating + ", totalPassengerTrips=" + totalPassengerTrips
+				+ ", driverRating=" + driverRating + ", totalDriverTrips=" + totalDriverTrips + "]";
+	}
 		
+	
 }

@@ -4,11 +4,16 @@ import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.hibernate.annotations.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +22,8 @@ import com.ecse321.RideShare.RideShareService;
 
 @ComponentScan("com.ecse321.RideShare.*")
 
+@Entity
+@Table(name = "trip_table")
 public class Trip {
 	@Autowired
 	RideShareService service;
@@ -24,22 +31,48 @@ public class Trip {
 	JdbcTemplate jdbcTemplate;
 	
 	private static int tripIDCounter = 1; //Counter to ensure no two tripIDs are the same
+	@Id
+	@Column(name = "trip_id")
 	private final int tripID;
+	@Column(name = "driver_id")
 	private final int driverID; //This will be passed in when the trip is created and shouldn't change
 	private final String driverEmail; //Driver contact info should also not change since it references the driver's user data
 	private final String driverPhoneNumber;
 	
+	@Column(name = "departure_date")
 	private LocalDate departureDate; //this is just date part
+	@Column(name = "departure_time")
 	private LocalTime departureTime; //this is just the time part
+	@Column(name = "departure_location")
 	private String departureLocation;
-	private ArrayList<String> destinations = new ArrayList<String>();
-	private ArrayList<Float> tripDurations = new ArrayList<Float>();
-	private ArrayList<Float> prices = new ArrayList<Float>();
 	
+	//dependencies need to be confirmed
+	@Type(type = "string-array")
+	@Column(name = "destinations",columnDefinition="text[]")
+	private String[] destinations1;
+	@Type(type = "float-array")
+	@Column(name = "durations",columnDefinition="text[]")
+	private float[] tripDurations1;
+	@Type(type = "float-array")
+	@Column(name = "prices",columnDefinition="text[]")
+	private float[] prices1;
+	@Type(type = "int-array")
+	@Column(name = "passenger_id")
+	private int[] pId;
+	
+	//cast above arrays into arraylist
+	private ArrayList<String> destinations = new ArrayList<String>(Arrays.asList(destinations1));
+	private ArrayList<Float> tripDurations = toArrayList(tripDurations1);
+	private ArrayList<Float> prices = toArrayList(prices1);
+	private ArrayList<Integer> passengerIDList = toArrayList(pId);
+	
+	@Column(name = "seats_available")
 	private int availableSeats;
-	private ArrayList<Integer> passengerIDList = new ArrayList<Integer>();
+	@Column(name = "vehicle_type")
 	private String vehicleType;
+	@Column(name = "license_plate")
 	private String licensePlate;
+	@Column(name = "comments")
 	private String otherComments;
 
 	public Trip(int driverID, String driverEmail, String driverPhone, String date, String time, String depLocation, ArrayList<String> destinations, 
@@ -141,6 +174,21 @@ public class Trip {
 	}
 	*/
 	
-
+	//convert float array to arraylist
+	private ArrayList<Float> toArrayList(float[] arr){
+		ArrayList<Float> tmp = new ArrayList<Float>();
+		for(int i=0; i<arr.length;i++) {
+			tmp.add(arr[i]);
+		}
+		return tmp;
+	}
+	//convert int array to arraylist
+	private ArrayList<Integer> toArrayList(int[] arr){
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		for(int i=0; i<arr.length;i++) {
+			tmp.add(arr[i]);
+		}
+		return tmp;
+	}
 	
 }
