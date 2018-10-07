@@ -1,7 +1,17 @@
 # t07
 Springboot backend implementation for the ride-sharing service. 
 
+HOW TO USE:
+1. Using a REST client, send a GET request to "/instructions" to be provided with a list of actions
+2. Sending the associated request for any of those instructions will provide you with the required parameters that must be entered (if necessary)
+
 ### Changelog
+Oct. 7, 2018: Fixed unintended cases for Join/Leave
+- Previously you could Join a trip even if your passenger ID was already on the list, adding you twice and taking another seat
+- Now it checks if your ID is already on the list and if you are, then you aren't added
+- You can now only Leave a trip if your ID is already on the list, or else previously it would reduce the available seats even though no one was taken off the list
+- Added HOW TO USE at the top of the README
+
 Oct. 6, 2018: Added JUnit tests for User and Trip classes
 - 4 JUnit tests were added
 - One to test some of the getters and setters of the User class
