@@ -254,5 +254,8 @@ public class Trip {
 		}
 		return tmp;
 	}
+<<<<<<< HEAD
 	
+=======
+>>>>>>> fd7c4763def60514ef20a8bdc9005ddbb70bcca8
 }
