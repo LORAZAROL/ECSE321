@@ -55,7 +55,6 @@ public class User {
 	private float driverRating;
 	private int totalDriverTrips;
 	
-	}
 	//Class constructor for the user
 	public User(String firstName, String lastName, String email, String phoneNumber, String password, Boolean isAdmin) {
 		//Set all of the info for the user given the input
